@@ -1,4 +1,4 @@
-import { DOMProps } from "@/class/Component";
+import { Node, DOMProps } from "@/types";
 
 // 标签描述符的正则表达式
 // 支持识别如 'div', 'div.className', 'div#id'
@@ -10,11 +10,11 @@ const SelectorReg = /([\w-]+)?(?:#([\w-]+))?(?:\.([\w-]+))?/;
  * @param props 标签属性符，描述创建标签属性
  * @param children 标签的孩子
  */
-export function $(
+export function $<T extends HTMLElement>(
   desc?: string,
   props?: DOMProps,
   children?: string | Node[]
-): HTMLElement {
+): T {
   let el = null;
   // 创建元素
   if (desc) {
@@ -32,7 +32,7 @@ export function $(
 
   for (const key in props) {
     // style
-    if (typeof key === "object" && key === "style") {
+    if (typeof props[key] === "object" && key === "style") {
       let styleStr = "";
       const style = props[key];
       for (const k in style) {
@@ -51,12 +51,12 @@ export function $(
       el.innerHTML = children;
     } else {
       for (const child of children) {
-        el.appendChild(child);
+        el.appendChild(child.el);
       }
     }
   }
 
-  return el;
+  return el as T;
 }
 
 export function addClass(el: Element, className: string | string[]): void {

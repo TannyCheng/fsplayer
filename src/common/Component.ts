@@ -1,13 +1,6 @@
 import { $ } from "@/utils/dom";
 import { Event } from "./Event";
-
-// 组件元素标签属性
-export interface DOMProps {
-  className?: string | string[];
-  id?: string;
-  style?: Partial<CSSStyleDeclaration>;
-  [props: string]: any;
-}
+import { Node, DOMProps } from "@/types";
 
 /**
  * 组件配置项
@@ -20,8 +13,8 @@ export interface ComponentOptions {
   id: string;
   container?: HTMLElement;
   desc?: string;
-  props: DOMProps;
-  children: string | Node[];
+  props?: DOMProps;
+  children?: string | Node[];
   [prop: string]: any;
 }
 
@@ -52,5 +45,19 @@ export abstract class Component {
     this.events.off(event, callback);
   }
 
-  abstract init(): void;
+  init(): void {
+    this.initComponent();
+    this.initEvent();
+  }
+
+  initEvent(): void {
+    this.initPCEvent();
+    this.initMobileEvent();
+  }
+
+  abstract initPCEvent(): void;
+  abstract initMobileEvent(): void;
+  abstract initComponent(): void;
+  abstract resetComponent(): void;
+  abstract dispose(): void;
 }
