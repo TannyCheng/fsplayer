@@ -1,0 +1,72 @@
+@use "config" as *;
+
+// 将选择器转为字符串
+@function selectorTostring($selector) {
+  $selector: inspect($selector);
+  $selector: str-slice(
+    $string: $selector,
+    $start-at: 2,
+    $end-at: -2
+  );
+  @return $selector;
+}
+
+// 判断父级选择器是否包含'--' 是否有修饰符
+@function containModifier($selector) {
+  $selector: selectorTostring($selector);
+
+  @if str-index($string: $selector, $substring: $modifier-seperator) {
+    // str-index返回字符串的第一个索引
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// 判断父级选择器是否包含'is-' 是否包含动作状态
+@function containWhenFlag($selector) {
+  $selector: selectorTostring($selector);
+
+  @if str-index($string: $selector, $substring: "." + $state-prefix) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// 判断父级选择器是否包含':' 伪类元素、伪类选择器
+@function containPseudoClass($selector) {
+  $selector: selectorTostring($selector);
+
+  @if str-index($string: $selector, $substring: ":") {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// 判断是否嵌套
+@function hitAllSpecialNestRule($selector) {
+  @return containModifier($selector) or containWhenFlag($selector) or containPseudoClass($selector);
+}
+
+// 拼接变量名字符串 joinVarName(('progress', 'loading')) => --fp-progress-loading
+@function joinVarName($list) {
+  $name: "--" + $namespace;
+  @each $item in $list {
+    @if $item != "" {
+      $name: $name + $common-seperator + $item;
+    }
+  }
+  @return $name;
+}
+
+// 拼接变量名字符串 getCssVarName('progress', 'loading') => '--fp-progress-loading'
+@function getCssVarName($args...) {
+  @return #{joinVarName($args)};
+}
+
+// 获取变量值 getCssVar('progress', 'loading') => var(--fp-progress-loading)
+@function getCssVar($args...) {
+  @return var(#{joinVarName($args)});
+}

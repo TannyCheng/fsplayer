@@ -10,8 +10,8 @@ type ArrayBufferWrapper = {
 const rRange = /(\d+)-(\d+)\/(\d+)/;
 
 export class Downloader {
-  // 每次请求的文件大小, 默认1MB
-  private chunkSize = 1024 * 1024;
+  // 每次请求的文件大小, 默认150KB
+  private chunkSize = 1024 * 150;
   // 每次请求相对文件的初始偏移量
   private chunkStart = 0;
   // 文件总大小
@@ -20,11 +20,11 @@ export class Downloader {
   private state: States = "none";
   // 是否完整请求完文件
   eof = false;
-  private fetcher: AbortController;
+  private fetcher!: AbortController;
   // fetch配置项
   private fetchInit: RequestInit;
   // 回调函数（数据处理函数）
-  private callback: (bytes: MP4ArrayBuffer, total: number) => void;
+  private callback!: (bytes: MP4ArrayBuffer, total: number) => void;
 
   constructor(url: string, fetchInit: RequestInit = {}) {
     this.url = url;
@@ -56,7 +56,7 @@ export class Downloader {
     this.state = "stopped";
     if (this.fetcher !== null) {
       this.fetcher.abort();
-      this.fetcher = null;
+      this.fetcher = null!;
     }
   }
 
@@ -107,7 +107,7 @@ export class Downloader {
         if (res.ok) {
           let [, begin, end, total] = res.headers
             .get("Content-Range")
-            .match(rRange);
+            ?.match(rRange);
           this.chunkStart = parseInt(end, 10);
           this.total = parseInt(total, 10);
           return {
@@ -116,7 +116,7 @@ export class Downloader {
           } as unknown as ArrayBufferWrapper;
         }
       });
-      const { bytes, start } = res;
+      const { bytes, start } = res as ArrayBufferWrapper;
       const buffers = await bytes;
       success(buffers, start);
     } catch (e) {
@@ -128,7 +128,7 @@ export class Downloader {
 
   async loadFile() {
     const onSuccess = (bytes: MP4ArrayBuffer, start: number) => {
-      this.fetcher = null;
+      this.fetcher = null!;
       this.eof = this.chunkStart >= this.total - 1 ? true : false;
       if (this.eof) {
         this.state = "finished";

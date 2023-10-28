@@ -1,0 +1,32 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+
+@include b(loading) {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+
+  i {
+    position: absolute;
+    left: 44.5%;
+    top: 37%;
+    width: 5px;
+    height: 25%;
+    border-radius: 50%/20%;
+    opacity: 0.25;
+    background-color: #fff;
+    animation: fsplayer-loading 1s infinite;
+  }
+
+  @for $i from 1 through 12 {
+    i:nth-child(#{$i}) {
+      transform: rotate(-180deg + 30 * $i) translateY(-150%);
+      animation-delay: 0.0833s * ($i - 1);
+    }
+  }
+}

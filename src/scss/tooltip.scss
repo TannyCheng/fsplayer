@@ -1,0 +1,24 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./var.scss";
+
+@include b(tooltip) {
+  display: none;
+  width: fit-content;
+  max-width: 5em;
+  line-height: 1.5;
+  cursor: default;
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+  bottom: 41px;
+  font-size: getCssVar("font-size", "small");
+  background-color: getCssVar("bg-color", "tooltip");
+  color: getCssVar("color", "white");
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 2px;
+
+  &-content {
+  }
+}

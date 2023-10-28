@@ -1,0 +1,19 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/var";
+
+@include b(time) {
+  display: inline-flex;
+  height: 100%;
+  cursor: default;
+  vertical-align: middle;
+  text-align: center;
+  align-items: center;
+  font-size: getCssVar("font-size", "small");
+  margin-left: 5px;
+
+  @include e(seperator) {
+    padding: 0 2px;
+  }
+}

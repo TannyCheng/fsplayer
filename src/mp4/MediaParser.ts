@@ -1,17 +1,16 @@
-import Player from "@/player";
+import { Player } from "@/player";
 import MP4box, { MP4ArrayBuffer, MP4File } from "mp4box";
 import { Downloader } from "./Downloader";
-import { Video } from "@/types";
+import { VideoInfo } from "@/types";
 
 class MediaParser {
   url: string;
-  player: Player;
   mp4boxFile: MP4File;
   downloader: Downloader;
 
-  constructor(url: string, player: Player) {
+  constructor(url: string, private player: Player) {
     this.url = url;
-    this.player = player;
+    this.player.video.src = url;
     this.mp4boxFile = MP4box.createFile();
     this.downloader = new Downloader(url);
     this.init();
@@ -25,7 +24,7 @@ class MediaParser {
   initEvent() {
     this.mp4boxFile.onReady = (info) => {
       this.downloader.stop();
-      const videoInfo: Video = {
+      const videoInfo: VideoInfo = {
         url: this.url,
         lastUpdateTime: info.modified,
         videoCodec: info.tracks[0].codec,
@@ -39,13 +38,16 @@ class MediaParser {
   }
 
   loadFile() {
-    this.downloader.setCallback((bytes: MP4ArrayBuffer, eof: boolean) => {
+    this.downloader.setCallback((bytes: MP4ArrayBuffer, total: number) => {
       let nextStart = 0;
       if (bytes) {
         nextStart = this.mp4boxFile.appendBuffer(bytes);
+        this.downloader.eof = nextStart >= total - 1 ? true : false;
       }
       // 文件加载完毕
-      if (eof) {
+      if (this.downloader.eof) {
+        console.log("MP4 file has been loaded successfully");
+
         this.mp4boxFile.flush();
       } else {
         this.downloader.setChunkStart(nextStart);

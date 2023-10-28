@@ -1,0 +1,44 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/var";
+
+@include b(speed) {
+  width: 50px;
+  position: relative;
+  font-size: getCssVar("font-size", "base");
+
+  cursor: pointer;
+
+  @include b(speed-menu) {
+    width: 70px;
+    border-radius: 2px;
+    display: none;
+    position: absolute;
+    text-align: center;
+    bottom: 31px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: getCssVar("bg-color", "toast");
+
+    &-item {
+      width: 100%;
+      height: 36px;
+      line-height: 36px;
+      font-weight: normal;
+
+      &:hover {
+        background-color: hsla(0, 0%, 100%, 0.1);
+      }
+
+      @include m(selected) {
+        color: getCssVar("theme-color");
+      }
+    }
+  }
+
+  @include b(speed-current) {
+    width: 100%;
+    font-weight: 600;
+  }
+}

@@ -1,0 +1,60 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/var";
+
+@include b(control) {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: getCssVar("z-index", "control");
+
+  @include b(control-mask) {
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==)
+      repeat-x bottom;
+    pointer-events: none;
+  }
+
+  @include b(control-bar-bottom) {
+    height: 35px;
+  }
+
+  @include b(control-bar-medium) {
+    height: 10px;
+    cursor: pointer;
+    &:hover {
+      @include b(progress-bar) {
+        height: 4px;
+      }
+    }
+  }
+}
+
+@include b(control-bar) {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  // height: 35px;
+  line-height: 22px;
+  padding: 0 12px;
+  font-size: getCssVar("font-size", "small");
+  color: getCssVar("text-color");
+  transition: all 0.2s ease-out;
+
+  @include b(spacer) {
+    flex: 1;
+  }
+}
+
+@include b(control-bar-top) {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

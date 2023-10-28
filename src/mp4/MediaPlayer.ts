@@ -1,18 +1,17 @@
-import Player from "@/player";
+import { Player } from "@/player";
 import { Downloader } from "./Downloader";
 import MP4box, { MP4ArrayBuffer, MP4File, MP4SourceBuffer } from "mp4box";
-import { MediaTrack, MoovBoxInfo } from "@/types/mp4";
+import { VideoInfo, MediaTrack, MoovBoxInfo } from "@/types";
 
 class MediaPlayer {
   url: string;
-  player: Player;
-  downloader: Downloader;
-  mp4boxFile: MP4File;
-  mediaSource: MediaSource;
-  mediaInfo: MoovBoxInfo;
+  downloader!: Downloader;
+  mp4boxFile!: MP4File;
+  mediaSource!: MediaSource;
+  mediaInfo!: MoovBoxInfo;
   lastSeekTime: number = 0;
 
-  constructor(url: string, player: Player) {
+  constructor(url: string, private player: Player) {
     this.url = url;
     this.player = player;
     this.init();
@@ -23,11 +22,12 @@ class MediaPlayer {
     this.downloader = new Downloader(this.url);
     this.mediaSource = new MediaSource();
     this.player.video.src = URL.createObjectURL(this.mediaSource);
+
     this.initEvent();
   }
 
   initEvent() {
-    this.mediaSource.addEventListener("sourceopen", (e) => {
+    this.mediaSource.addEventListener("sourceopen", () => {
       console.log("Starting to load MP4 file");
       this.loadFile();
     });
@@ -42,10 +42,20 @@ class MediaPlayer {
       console.log("Moov box has been parsed successfully");
       this.mediaInfo = info;
       if (info.isFragmented) {
-        this.mediaSource.duration = info.fragment_duration / info.timescale;
+        this.mediaSource.duration = info.fragment_duration / info.timescale!;
       } else {
-        this.mediaSource.duration = info.duration / info.timescale;
+        this.mediaSource.duration = info.duration! / info.timescale!;
       }
+      const videoInfo: VideoInfo = {
+        url: this.url,
+        lastUpdateTime: info.modified,
+        videoCodec: info.tracks![0].codec,
+        audioCodec: info.tracks![1].codec,
+        isFragmented: info.isFragmented,
+        width: info.tracks![0].track_width,
+        height: info.tracks![0].track_height,
+      };
+      this.player.setVideoInfo(videoInfo);
       // 当请求到了Moov box解析其中的视频元信息，暂停发送进一步的http请求
       this.downloader.stop();
       this.initializeAllSourceBuffers();
@@ -53,10 +63,10 @@ class MediaPlayer {
 
     // MP4分片
     this.mp4boxFile.onSegment = (id, user, buffer, sampleNumber, is_last) => {
-      let sb = user;
-      sb.segmentIndex++;
+      const sb = user;
+      sb.segmentIndex!++;
       // 缓冲区
-      sb.pendingAppends.push({ id, buffer, sampleNumber, is_last });
+      sb.pendingAppends!.push({ id, buffer, sampleNumber, is_last });
       this.onUpdateEnd(sb, false);
     };
 
@@ -153,7 +163,7 @@ class MediaPlayer {
 
   initializeAllSourceBuffers() {
     if (this.mediaInfo) {
-      this.mediaInfo.tracks.forEach((track) =>
+      this.mediaInfo.tracks!.forEach((track) =>
         this.addSourceBufferToMediaSource(track)
       );
       console.log("MP4File Initialize SourceBuffer");
@@ -165,7 +175,7 @@ class MediaPlayer {
   initializeSourceBuffers() {
     this.mp4boxFile.initializeSegmentation().forEach((seg, idx) => {
       if (idx === 0) {
-        seg.user.ms.pendingInits = 0;
+        seg.user.ms!.pendingInits = 0;
       }
 
       this.onInitAppended = this.onInitAppended.bind(this);
@@ -174,7 +184,7 @@ class MediaPlayer {
         `MSE - SourceBuffer # ${seg.user.id}:
         Appending initialization data`
       );
-      seg.user.appendBuffer(seg.buffer);
+      seg.user.appendBuffer(seg.buffer as ArrayBuffer);
       seg.user.segmentIndex = 0;
       seg.user.ms.pendingInits++;
     });
@@ -182,16 +192,16 @@ class MediaPlayer {
 
   onInitAppended(e: Event) {
     let sb = e.target as MP4SourceBuffer;
-    if (sb.ms.readyState === "open") {
+    if (sb.ms!.readyState === "open") {
       sb.sampleNumber = 0;
       sb.onupdateend = null;
       sb.addEventListener("updateend", () => this.onUpdateEnd(sb, true));
 
       // 处理缓冲区
       this.onUpdateEnd(sb, true);
-      sb.ms.pendingInits--;
+      sb.ms!.pendingInits--;
       // 缓冲区添加完毕,Downloader加载下一片段
-      if (sb.ms.pendingInits === 0) {
+      if (sb.ms!.pendingInits === 0) {
         this.start();
       }
     }
@@ -201,7 +211,7 @@ class MediaPlayer {
   onUpdateEnd(sb: MP4SourceBuffer, isEndOfAppend: boolean) {
     if (isEndOfAppend) {
       if (sb.sampleNumber) {
-        this.mp4boxFile.releaseUsedSamples(sb.id, sb.sampleNumber);
+        this.mp4boxFile.releaseUsedSamples(sb.id as number, sb.sampleNumber);
         delete sb.sampleNumber;
       }
       // 最后一个片段加载完毕，关闭MSE流

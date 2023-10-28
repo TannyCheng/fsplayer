@@ -1,0 +1,24 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/var";
+
+@include b(control-item) {
+  fill: getCssVar("color", "white");
+  font-size: 0;
+  width: 36px;
+  height: 22px;
+  line-height: 22px;
+  outline: none;
+  position: relative;
+  text-align: center;
+  color: getCssVar("text-color");
+  cursor: pointer;
+
+  &:hover {
+    @include b(icon) {
+      opacity: 1;
+    }
+    color: getCssVar("color", "white");
+  }
+}

@@ -1,63 +1,31 @@
-import { $ } from "@/utils/dom";
-import { Event } from "./Event";
-import { Node, DOMProps } from "@/types";
+import { DOMAttrs, Disposable } from "@/types";
+import { $, removeNode } from "../utils";
+import { dispose } from "../utils/store";
+import { isString } from "../utils/is";
 
-/**
- * 组件配置项
- * id 每个组件的唯一id
- * container 包裹组件的容器
- * desc 元素描述符，指定组件标签
- * props 元素属性
- */
-export interface ComponentOptions {
-  id: string;
-  container?: HTMLElement;
-  desc?: string;
-  props?: DOMProps;
-  children?: string | Node[];
-  [prop: string]: any;
-}
-
-export abstract class Component {
-  protected events = new Event();
-  readonly id: string;
+export class Component implements Disposable {
   el: HTMLElement;
 
-  constructor(options: ComponentOptions) {
-    const { id, props, desc, children } = options;
-    this.id = id;
-    this.el = $(desc, props, children);
-
-    if (options.container) {
-      options.container.appendChild(this.el);
+  constructor(
+    container?: HTMLElement,
+    desc?: HTMLElement | string,
+    attrs?: DOMAttrs,
+    children?: string | Array<Node>
+  ) {
+    if (!isString(desc)) {
+      this.el = desc;
+    } else {
+      this.el = $(desc, attrs, children);
     }
+    if (container) container.appendChild(this.el);
   }
 
-  on(event: string, callback: Function) {
-    this.events.on(event, callback);
+  applyStyle(style: Partial<CSSStyleDeclaration>) {
+    Object.assign(this.el.style, style);
   }
 
-  emit(event: string, ...args: unknown[]) {
-    this.events.emit(event, ...args);
+  dispose() {
+    removeNode(this.el);
+    dispose(this);
   }
-
-  off(event: string, callback: Function) {
-    this.events.off(event, callback);
-  }
-
-  init(): void {
-    this.initComponent();
-    this.initEvent();
-  }
-
-  initEvent(): void {
-    this.initPCEvent();
-    this.initMobileEvent();
-  }
-
-  abstract initPCEvent(): void;
-  abstract initMobileEvent(): void;
-  abstract initComponent(): void;
-  abstract resetComponent(): void;
-  abstract dispose(): void;
 }

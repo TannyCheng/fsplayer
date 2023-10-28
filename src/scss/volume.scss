@@ -1,0 +1,105 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/var";
+
+@include b(volume) {
+  @include m(vertical) {
+    @include b(volume-box) {
+      display: none;
+      width: 32px;
+      position: absolute;
+      bottom: 31px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background-color: getCssVar("bg-color", "toast");
+
+      @include b(volume-number) {
+        color: getCssVar("text-color");
+        font-size: getCssVar("font-size", "small");
+        width: 100%;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        margin-bottom: 2px;
+      }
+
+      @include b(volume-bar) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 4px;
+        height: 60%;
+        position: relative;
+        margin: 0 auto;
+        background-color: getCssVar("text-color");
+        border-radius: 2px;
+        cursor: pointer;
+
+        @include e(inner) {
+          width: 100%;
+          height: 100%;
+          transform-origin: bottom center;
+          background-color: getCssVar("theme-color");
+        }
+
+        @include e(thumb) {
+          width: 10px;
+          height: 10px;
+          position: absolute;
+          transform: translate(0, 50%);
+          border-radius: 50%;
+          background-color: getCssVar("theme-color");
+        }
+      }
+    }
+  }
+
+  @include m(horizon) {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content !important;
+
+    @include b(volume-box) {
+      flex: auto;
+      display: block;
+      margin: 0 5px;
+      // position: absolute;
+      // left: 100%;
+      // bottom: 50%;
+      height: 4px;
+      transform: translateY(50%);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: width 0.2s ease-out;
+
+      @include b(volume-bar) {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        position: relative;
+        background-color: getCssVar("text-color");
+        border-radius: 2px;
+
+        @include e(inner) {
+          transform-origin: left center;
+          width: 100%;
+          height: 100%;
+          background-color: getCssVar("theme-color");
+        }
+
+        @include e(thumb) {
+          opacity: 0;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          position: absolute;
+          left: 0;
+          transform: translate(-50%, 0);
+          background-color: getCssVar("theme-color");
+        }
+      }
+    }
+  }
+}

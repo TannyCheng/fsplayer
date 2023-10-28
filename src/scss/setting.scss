@@ -1,0 +1,33 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss";
+
+@include b(setting) {
+  &-panel {
+    display: none;
+    min-width: 125px;
+    padding: 5px 0;
+    position: absolute;
+    bottom: 31px;
+    box-sizing: border-box;
+    transform: translateX(-50%);
+    background-color: getCssVar("bg-color", "toast");
+    cursor: default;
+
+    .#{$namespace}-setting-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 10px;
+      color: #eee;
+      font-size: getCssVar("font-size", "small");
+      box-sizing: border-box;
+      margin-bottom: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: hsla(0, 0%, 100%, 0.1);
+      }
+    }
+  }
+}

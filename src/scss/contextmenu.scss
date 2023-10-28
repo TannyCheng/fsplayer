@@ -1,0 +1,29 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/var";
+
+@include b(contextmenu) {
+  position: absolute;
+  min-width: 100px;
+  border-radius: 4px;
+  color: #eee;
+  background-color: rgba(33, 33, 33, 0.9);
+  font-size: getCssVar("font-size", "small");
+  z-index: getCssVar("z-index", "context-menu");
+
+  &-item {
+    cursor: pointer;
+    text-align: left;
+    height: 30px;
+    padding: 4px 20px;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: hsla(0, 0%, 100%, 0.12);
+    }
+  }
+}

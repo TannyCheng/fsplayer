@@ -1,0 +1,18 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/var" as *;
+@use "./common/var.scss" as *;
+
+:root {
+  // color
+  @include set-css-var-value("color-white", $color-white);
+  @include set-css-var-value("color-black", $color-black);
+  @include set-css-var-value("color-bilibili", $color-bilibili);
+  @include set-css-var-value("color-default", $color-default);
+  @include set-css-var-value("theme-color", $theme-color);
+
+  @include set-css-component-value("font-size", $font-size);
+  @include set-css-component-value("font-family", $font-family);
+  @include set-css-component-value("text-color", $text-colors);
+  @include set-css-component-value("bg-color", $bg-colors);
+  @include set-css-component-value("z-index", $z-index);
+}

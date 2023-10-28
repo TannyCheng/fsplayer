@@ -1,0 +1,34 @@
+@use "./scss/index.scss";
+@use "./scss/mixins/mixins" as *;
+@use "./scss/common/var.scss" as *;
+@use "./scss/mixins/function.scss" as *;
+
+body {
+  width: 100%;
+  height: 100%;
+}
+
+#video {
+  height: 400px;
+  width: 600px;
+  resize: both;
+  margin: 100px auto;
+}
+
+.fs-player {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  user-select: none;
+  background-color: black;
+  font-family: getCssVar("font-family");
+
+  video {
+    max-width: 100%;
+    max-height: 100%;
+    outline: none;
+  }
+}

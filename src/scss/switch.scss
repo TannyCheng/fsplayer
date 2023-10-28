@@ -1,0 +1,61 @@
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/function.scss" as *;
+@use "./mixins/var" as *;
+@use "./common/var.scss" as *;
+
+@include b(switch) {
+  @include set-css-component-value(
+    "switch-color",
+    (
+      "on": $theme-color,
+      "off": #dcdfe6
+    )
+  );
+}
+
+@include b(switch) {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  position: relative;
+  height: 32px;
+
+  @include when(switch-active) {
+    .#{$namespace}-switch__core {
+      background-color: var(getCssVarName("theme-color"), getCssVar("switch-color", "on"));
+      border-color: var(getCssVarName("theme-color"), getCssVar("switch-color", "on"));
+      .#{$namespace}-switch__action {
+        left: calc(100% - 17px);
+      }
+    }
+  }
+
+  @include e(core) {
+    display: inline-flex;
+    align-items: center;
+    min-width: 32px;
+    height: 20px;
+    background-color: getCssVar("switch-color", "off");
+    border: 1px solid getCssVar("switch-color", "off");
+    outline: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition:
+      boder-color 0.3s,
+      background-color 0.3s;
+
+    .#{$namespace}-switch__action {
+      position: absolute;
+      left: 1px;
+      border-radius: 100%;
+      width: 16px;
+      height: 16px;
+      background-color: getCssVar("color", "white");
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+    }
+  }
+}

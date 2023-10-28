@@ -101,15 +101,5 @@ declare module "mp4box" {
     seek(time: number, b: boolean): { offset: number; [props: string]: any };
   }
 
-  interface LogInterface {
-    debug: (module: string, msg: string) => void;
-    log: (module: string, msg: string) => void;
-    info: (module: string, msg: string) => void;
-    warn: (module: string, msg: string) => void;
-    error: (module: string, msg: any) => void;
-  }
-
-  export const Log: LogInterface;
-
   export function createFile(): MP4File;
 }
