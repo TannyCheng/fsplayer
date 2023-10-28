@@ -112,8 +112,6 @@ export class ControlBar extends Component {
   }
 
   update(nextItems: (ControlItem | string)[]) {
-    // console.log("controlbar: update", nextItems);
-
     if (nextItems) {
       const items: ControlItem[] = [];
       nextItems.forEach((item) => {
@@ -129,6 +127,5 @@ export class ControlBar extends Component {
       this.updateTooltipPos();
       this.player.emit(EVENT.CONTROL_ITEM_UPDATE);
     }
-    console.log("controlbar: update", this.controlItems);
   }
 }

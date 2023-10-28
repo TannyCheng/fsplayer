@@ -57,7 +57,7 @@ export class Rect implements Disposable {
 
   dispose() {
     if (this.player) this.player.off(EVENT.UPDATE_SIZE, this.update);
-    this.el = null;
-    this.rect = null;
+    this.el = null!;
+    this.rect = null!;
   }
 }

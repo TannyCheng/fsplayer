@@ -107,7 +107,7 @@ export class Downloader {
         if (res.ok) {
           let [, begin, end, total] = res.headers
             .get("Content-Range")
-            ?.match(rRange);
+            ?.match(rRange)!;
           this.chunkStart = parseInt(end, 10);
           this.total = parseInt(total, 10);
           return {

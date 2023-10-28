@@ -1,11 +1,22 @@
 {
   "name": "fsplayer",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
+  "description": "A nice video player",
+  "license": "MIT",
+  "author": "TannyCheng <tannychen@qq.com>",
   "type": "module",
   "files": [
-    "dist"
+    "dist/**/*",
+    "src/**/*"
   ],
+  "main": "./dist/fs-player.umd.js",
+  "module": "./dist/fs-player.es.js",
+  "types": "./dist/src/index.d.ts",
+  "repository": {
+    "url": "https://github.com/TannyCheng/fsplayer.git",
+    "type": "git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -19,5 +30,25 @@
   },
   "dependencies": {
     "mp4box": "^0.5.2"
+  },
+  "keywords": [
+    "video",
+    "player",
+    "html5"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2versions",
+    "not dead"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/fs-player.es.js",
+      "require": "./dist/fs-player.umd.js"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }

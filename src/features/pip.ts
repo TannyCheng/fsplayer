@@ -22,7 +22,7 @@ export class PictureInPicture implements Disposable {
   dispose() {
     this.player.off(EVENT.ENTER_PIP);
     this.player.off(EVENT.EXIT_PIP);
-    this.player = null;
+    this.player = null!;
     dispose(this);
   }
 }

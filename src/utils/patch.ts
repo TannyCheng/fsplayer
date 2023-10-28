@@ -18,7 +18,7 @@ function isSameNode(a: Node, b: Node) {
 
 function unmount(node: Node, unmountNode?: (n: Node) => void) {
   removeNode(node.el);
-  unmountNode(node);
+  if (unmountNode) unmountNode(node);
 }
 
 function mountOrMove(
@@ -123,7 +123,7 @@ export function patch(
     let nextIdx = 0;
     for (let i = startIndex; i <= preEnd; i++) {
       preNode = preNodes[i];
-      nextIdx = idMap.get(preNode.id ?? preNode);
+      nextIdx = idMap.get(preNode.id ?? preNode)!;
 
       if (nextIdx == null) {
         unmount(preNode, op.unmount);
@@ -168,10 +168,10 @@ export function patchStyle(
   if (!nextStyle) {
     el.removeAttribute("style");
   } else {
-    Object.keys(nextStyle).forEach((k) => {
+    Object.keys(nextStyle).forEach((k: any) => {
       el.style[k] = nextStyle[k] || "";
     });
-    Object.keys(preStyle).forEach((k) => {
+    Object.keys(preStyle).forEach((k: any) => {
       if (!(k in nextStyle)) {
         el.style[k] = "";
       }
@@ -188,7 +188,7 @@ const propMap: Record<string, boolean> = {
 
 function setAttr(el: HTMLElement, key: string, value: any) {
   if (propMap[key]) {
-    el[key] = value;
+    (el as any)[key] = value;
   } else if (value === null) {
     el.removeAttribute(key);
   } else {

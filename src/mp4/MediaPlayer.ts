@@ -186,7 +186,7 @@ class MediaPlayer {
       );
       seg.user.appendBuffer(seg.buffer as ArrayBuffer);
       seg.user.segmentIndex = 0;
-      seg.user.ms.pendingInits++;
+      seg.user.ms!.pendingInits!++;
     });
   }
 
@@ -199,7 +199,7 @@ class MediaPlayer {
 
       // 处理缓冲区
       this.onUpdateEnd(sb, true);
-      sb.ms!.pendingInits--;
+      sb.ms!.pendingInits!--;
       // 缓冲区添加完毕,Downloader加载下一片段
       if (sb.ms!.pendingInits === 0) {
         this.start();
@@ -217,8 +217,8 @@ class MediaPlayer {
       // 最后一个片段加载完毕，关闭MSE流
       if (sb.is_last) {
         let flag = true;
-        for (let i = 0; i < sb.ms.sourceBuffers.length; i++) {
-          if (sb.ms.sourceBuffers[i].updating) {
+        for (let i = 0; i < sb.ms!.sourceBuffers.length; i++) {
+          if (sb.ms!.sourceBuffers[i].updating) {
             flag = false;
             break;
           }
@@ -226,17 +226,17 @@ class MediaPlayer {
         if (flag) {
           console.log("Close MediaSource Stream");
 
-          sb.ms.endOfStream();
+          sb.ms!.endOfStream();
         }
       }
     }
     // 缓冲区不为空且此时没在传输，则取缓冲区数据传输
     if (
-      sb.ms.readyState === "open" &&
+      sb.ms!.readyState === "open" &&
       sb.updating === false &&
-      sb.pendingAppends.length > 0
+      sb.pendingAppends!.length > 0
     ) {
-      const buffer = sb.pendingAppends.shift();
+      const buffer = sb.pendingAppends!.shift();
       sb.sampleNumber = buffer.sampleNumber;
       sb.is_last = buffer.is_last;
       sb.appendBuffer(buffer.buffer);

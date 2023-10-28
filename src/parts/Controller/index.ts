@@ -97,7 +97,6 @@ export class Control extends Component {
   private emitAndUpdateBp = (): BpControl | undefined => {
     const width = this.player.rect.width;
     const matched = this.controls.find((c) => width <= c.bp);
-    console.log(matched);
 
     if (this.currentBp !== matched?.bp) {
       this.currentBp = matched?.bp;

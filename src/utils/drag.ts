@@ -13,7 +13,7 @@ export class Drag implements Disposable {
 
   private pending = false;
 
-  private lastEvent: PointerEvent;
+  private lastEvent!: PointerEvent;
 
   constructor(dom: HTMLElement, start: Fn, move: Fn, end?: Fn) {
     this.el = dom;
@@ -60,10 +60,10 @@ export class Drag implements Disposable {
     this.el.removeEventListener("pointerup", this.upHandler, true);
     this.el.removeEventListener("pointercancel", this.upHandler, true);
     this.el.removeEventListener("pointermove", this.moveHandler, true);
-    this.start = null;
-    this.move = null;
-    this.end = null;
-    this.lastEvent = null;
-    this.el = null;
+    this.start = null!;
+    this.move = null!;
+    this.end = null!;
+    this.lastEvent = null!;
+    this.el = null!;
   }
 }

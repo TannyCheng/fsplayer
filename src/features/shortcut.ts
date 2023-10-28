@@ -44,7 +44,7 @@ export class Shortcut implements Disposable {
       }
     }
 
-    const key = e.key;
+    const key = e.key === " " ? "Space" : e.key;
 
     let handled = false;
     if (this.map[key]) {

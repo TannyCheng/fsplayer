@@ -13,7 +13,7 @@ export class Component implements Disposable {
     children?: string | Array<Node>
   ) {
     if (!isString(desc)) {
-      this.el = desc;
+      this.el = desc!;
     } else {
       this.el = $(desc, attrs, children);
     }

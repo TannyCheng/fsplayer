@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import path, { resolve } from "path";
+import path from "path";
 
 export default defineConfig({
   resolve: {
@@ -19,13 +19,14 @@ export default defineConfig({
       },
     },
   },
-  css: {
-    devSourcemap: true,
-  },
   build: {
+    target: "es2015",
     lib: {
-      entry: resolve(__dirname, "index.ts"),
-      name: "fsPlayer",
+      entry: path.resolve(__dirname, "src/index.ts"),
+      name: "fsplayer",
+      fileName: (format) => `fs-player.${format}.js`,
     },
+    outDir: path.resolve(__dirname, "dist"),
+    sourcemap: true,
   },
 });

@@ -11,13 +11,13 @@ export function addDisposable<T extends Disposable>(
   disposable: T
 ): T {
   if (!disposableMap.has(key)) disposableMap.set(key, []);
-  disposableMap.get(key).push(disposable);
+  disposableMap.get(key)?.push(disposable);
   return disposable;
 }
 
 export function dispose(key: any) {
   if (disposableMap.has(key)) {
-    disposableMap.get(key).forEach((item) => item.dispose());
+    disposableMap.get(key)?.forEach((item) => item.dispose());
     disposableMap.delete(key);
   }
 }
